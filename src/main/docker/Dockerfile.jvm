@@ -1,0 +1,20 @@
+FROM maven:3.9.11-eclipse-temurin-21 AS build
+WORKDIR /build
+
+COPY parent/pom.xml parent/pom.xml
+COPY management/pom.xml management/pom.xml
+COPY management/src management/src
+
+RUN mvn -f management/pom.xml -B -ntp -DskipTests package
+
+FROM eclipse-temurin:21-jre
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+WORKDIR /work/
+
+COPY --from=build /build/management/target/quarkus-app/lib/ /work/lib/
+COPY --from=build /build/management/target/quarkus-app/*.jar /work/
+COPY --from=build /build/management/target/quarkus-app/app/ /work/app/
+COPY --from=build /build/management/target/quarkus-app/quarkus/ /work/quarkus/
+
+EXPOSE 8081
+CMD ["java", "-jar", "/work/quarkus-run.jar"]

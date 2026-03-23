@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.anipoll.management.proto.anime";
+option java_outer_classname = "AnimeProto";
+
+package anipoll.management.anime;
+
+message SharacterMessage {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64 animeId = 4;
+}
+
+message AnimeMessage {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  repeated SharacterMessage sharacters = 4;
+}
+
+message AnimeIdRequest {
+  int64 id = 1;
+}
+
+message AnimeListResponse {
+  repeated AnimeMessage items = 1;
+}
+
+message CreateAnimeRequest {
+  string name = 1;
+  string description = 2;
+}
+
+message UpdateAnimeRequest {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message DeleteAnimeResponse {
+  bool deleted = 1;
+}
+
+service AnimeService {
+  rpc GetAnime(AnimeIdRequest) returns (AnimeMessage);
+  rpc ListAnimes(google.protobuf.Empty) returns (AnimeListResponse);
+  rpc CreateAnime(CreateAnimeRequest) returns (AnimeMessage);
+  rpc UpdateAnime(UpdateAnimeRequest) returns (AnimeMessage);
+  rpc DeleteAnime(AnimeIdRequest) returns (DeleteAnimeResponse);
+}

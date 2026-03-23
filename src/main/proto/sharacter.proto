@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.anipoll.management.proto.sharacter";
+option java_outer_classname = "SharacterProto";
+
+package anipoll.management.sharacter;
+
+message AnimeRefMessage {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message SharacterMessage {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  AnimeRefMessage anime = 4;
+}
+
+message SharacterIdRequest {
+  int64 id = 1;
+}
+
+message SharacterListResponse {
+  repeated SharacterMessage items = 1;
+}
+
+message CreateSharacterRequest {
+  string name = 1;
+  string description = 2;
+  int64 animeId = 3;
+}
+
+message UpdateSharacterRequest {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64 animeId = 4;
+}
+
+message DeleteSharacterResponse {
+  bool deleted = 1;
+}
+
+service SharacterService {
+  rpc GetSharacter(SharacterIdRequest) returns (SharacterMessage);
+  rpc ListSharacters(google.protobuf.Empty) returns (SharacterListResponse);
+  rpc CreateSharacter(CreateSharacterRequest) returns (SharacterMessage);
+  rpc UpdateSharacter(UpdateSharacterRequest) returns (SharacterMessage);
+  rpc DeleteSharacter(SharacterIdRequest) returns (DeleteSharacterResponse);
+}
